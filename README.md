@@ -1,20 +1,18 @@
 # DatabaseProject
 
-Yelp Dataset https://www.yelp.com/dataset/documentation/main
++ **Weather(Nov 12-Nov 17)**
+https://www.kaggle.com/selfishgene/historical-hourly-weather-data#humidity.csv
 
-#### Data Cleaning.
++ **Accident(February 2016 to March 2019)**
+https://www.kaggle.com/sobhanmoosavi/us-accidents
 
-- DatabaseProject
-    - datasets
-        - business.json
-        - checkin.json
-        - review.json
-    - preprocess
-        - \_\_init\_\_.py
-        - review.py
-        - business.py
++ **Flight Delay( January, August, November, and December of 2016)**
+https://www.kaggle.com/niranjan0272/us-flight-delay
 
++ **America Gun Violence**
+https://www.kaggle.com/ericking310/us-gun-violence#gun-violence-data_01-2013_03-2018.csv
+
+#
 ```
-cd DatabaseProject
-export PYTHONPATH=.:$PYTHONPATH
-python3 preprocess/{table_name}.py dataset/{table_name}.json```
+    UNDO
+```
