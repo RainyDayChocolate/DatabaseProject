@@ -3,6 +3,7 @@
 """
 import argparse
 import os
+import pandas as pd
 
 from .accident import AccidentNormalizer
 from .flight_delay import FlightDelayNormalizer
@@ -11,7 +12,7 @@ from .weather import WeatherNormalizer
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('--dataset', type=str, default='./dataset_test',
+parser.add_argument('--dataset', type=str, default='../dataset_test',
                      help='The main path of whole datas')
 
 
@@ -48,3 +49,20 @@ if __name__ == '__main__':
     weather_normalier = WeatherNormalizer()
     weathers = weather_normalier.normalize(dataset_helper(weather))[0]
     weathers.to_csv()
+
+    accident_csv = pd.read_csv('../normalized_dataset/accidents')
+    accident_csv['start_time'] = pd.to_datetime(accident_csv['start_time'])
+    accident_csv['end_time'] = pd.to_datetime(accident_csv['end_time'])
+
+    incident_csv = pd.read_csv('../normalized_dataset/incidents')
+    incident_csv['date'] = pd.to_datetime(incident_csv['date'])
+
+    weather_csv = pd.read_csv('../normalized_dataset/weathers')
+    weather_csv['date'] = pd.to_datetime(weather_csv['date'])
+
+    location_csv = pd.read_csv('../normalized_dataset/locations')
+
+    weather_csv.to_csv('../normalized_dataset/Weathers', index=False)
+    accident_csv.to_csv('../normalized_dataset/Accidents', index=False)
+    incident_csv.to_csv('../normalized_dataset/Incidents', index=False)
+

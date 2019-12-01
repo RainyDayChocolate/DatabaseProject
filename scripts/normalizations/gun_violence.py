@@ -3,8 +3,10 @@
 
 import re
 
+import numpy as np
+
 from .relations import Incidents, Locations
-from .utils import Normalizer, STATE_NAME_TO_ABR, TRICK_CITIES
+from .utils import STATE_NAME_TO_ABR, TRICK_CITIES, Normalizer
 
 
 def record_to_dict(record):
@@ -24,6 +26,8 @@ def record_to_dict(record):
 def add_client_message(information_table,
                        records_dict, tag):
     for parti_id, record  in records_dict.items():
+        if tag == 'age':
+            record = eval(record)
         information_table[int(parti_id)][tag] = record
 
 
@@ -42,6 +46,7 @@ class GunViolenceNormalizer(Normalizer):
         self.relations =  [self.incidents, self.locations]
 
     def _normalize_record(self, record):
+        record = record.fillna(0)
         city = record['city_or_county']
         if city not in TRICK_CITIES:
             return
@@ -49,6 +54,9 @@ class GunViolenceNormalizer(Normalizer):
             return
         date=record['date']
         state = record['state']
+        if TRICK_CITIES[city] != state:
+            return
+
         state_abr = STATE_NAME_TO_ABR[record['state']]
         self.locations.add_entity(city=city,
                                   state_abr=state_abr,
@@ -66,6 +74,7 @@ class GunViolenceNormalizer(Normalizer):
                 message_params[tag_split] = record[tag]
             except:
                 return
+
         participants_message = self.participants_to_dict(**message_params)
         self.incidents.add_entity(incident_id=record['incident_id'],
                                   state_house_district=record['state_house_district'],
@@ -112,7 +121,3 @@ class GunViolenceNormalizer(Normalizer):
                            'status')
 
         return clients_messages
-
-
-
-

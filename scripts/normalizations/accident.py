@@ -63,6 +63,9 @@ class AccidentNormalizer(Normalizer):
     def _normalize_record(self, record):
         if record['City'] not in TRICK_CITIES:
             return
+        if TRICK_CITIES[record['City']] != \
+            STATE_ABR_TO_NAME[record['State']]:
+            return
         if record['Start_Time'][:4] != '2016': #Hard code Trick here
             return
         self._normalize_accident(record)
