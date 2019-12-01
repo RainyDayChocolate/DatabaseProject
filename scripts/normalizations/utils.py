@@ -65,17 +65,36 @@ STATE_ABR_TO_NAME = {
 }
 
 # Here is a trick for filitering data
-TRICK_CITIES = set([
-       'Vancouver', 'Portland', 'San Francisco', 'Seattle',
-       'Los Angeles', 'San Diego', 'Las Vegas', 'Phoenix', 'Albuquerque',
-       'Denver', 'San Antonio', 'Dallas', 'Houston', 'Kansas City',
-       'Minneapolis', 'Saint Louis', 'Chicago', 'Nashville', 'Indianapolis',
-       'Atlanta', 'Detroit', 'Jacksonville', 'Charlotte', 'Miami',
-       'Pittsburgh', 'Toronto', 'Philadelphia', 'New York', 'Montreal',
-       'Boston', 'Beersheba', 'Tel Aviv District', 'Eilat', 'Haifa',
-       'Nahariyya', 'Jerusalem'
-])
+TRICK_CITIES = {'Albuquerque': 'NM',
+                'Atlanta': 'GA',
+                'Boston': 'MA',
+                'Charlotte': 'NC',
+                'Chicago': 'IL',
+                'Dallas': 'TX',
+                'Denver': 'CO',
+                'Detroit': 'MI',
+                'Houston': 'TX',
+                'Indianapolis': 'IN',
+                'Jacksonville': 'FL',
+                'Kansas City': 'MO',
+                'Las Vegas': 'NV',
+                'Los Angeles': 'CA',
+                'Miami': 'FL',
+                'Minneapolis': 'MN',
+                'Nashville': 'TN',
+                'New York': 'NY',
+                'Philadelphia': 'PA',
+                'Phoenix': 'AZ',
+                'Pittsburgh': 'PA',
+                'Portland': 'OR',
+                'Saint Louis': 'MO',
+                'San Antonio': 'TX',
+                'San Diego': 'CA',
+                'San Francisco': 'CA',
+                'Seattle': 'WA'}
 
+TRICK_CITIES = {city: STATE_ABR_TO_NAME[state_abr]
+                for city, state_abr in TRICK_CITIES.items()}
 TRICK_YEAR = 2016
 
 STATE_NAME_TO_ABR = {state: abr

@@ -27,9 +27,10 @@ class Relation:
 
     def to_csv(self, path=None):
         relation_name = self.__class__.__name__
+        relation_name = relation_name.lower()
         if not path:
             # Hard code for the path, lazy to optimize.
-            data_dir = './normalized'
+            data_dir = '../normalized_dataset'
             if not os.path.exists(data_dir):
                 os.mkdir(data_dir)
 
@@ -130,7 +131,7 @@ class FlightsOperations(Relation):
     def __init__(self):
         self.index = 0
         self.table = set()
-        self._values_names = ('flight_id',
+        self._values_names = ('flight_operation_id',
                               'carrier',
                               'flight_num',
                               'crs_dep_date', 'dep_date',
@@ -190,7 +191,7 @@ class Weathers(Relation):
 
     def __init__(self):
         self.table = {}
-        self._keys_names = ('city', 'date')
+        self._keys_names = ('city', 'state', 'date')
         self._values_names = ('humidity',
                               'pressure',
                               'temperature',
@@ -198,12 +199,12 @@ class Weathers(Relation):
                               'wind_direction',
                               'weather_description')
 
-    def add_entity(self, city, date,
+    def add_entity(self, city, state, date,
                    humidity, pressure,
                    temperature, wind_speed,
                    wind_direction,
                    weather_description):
-        key = (city, date)
+        key = (city, state, date)
         values = (humidity, pressure,
                   temperature, wind_speed,
                   wind_direction,
@@ -218,7 +219,7 @@ class Accidents(Relation):
         self.table = {}
         self._keys_names = ('accident_id', )
         self._values_names = ('city', 'state', 'street',
-                              'severity', 'start_Time', 'end_Time',
+                              'severity', 'start_time', 'end_time',
                               'distance', 'side',
                               'visibility', 'weather_condition',
                               'sunrise_sunset')

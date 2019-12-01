@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 from .relations import Weathers
-from .utils import Normalizer
+from .utils import Normalizer, TRICK_CITIES
 
 
 class WeatherNormalizer(Normalizer):
@@ -41,10 +41,11 @@ class WeatherNormalizer(Normalizer):
         city_desc = city_desc[(city_desc.Country == 'United States')]
 
         weather_table = weather_table[weather_table['city'].isin(city_desc['City'])]
+        weather_table['state'] = weather_table['city'].apply(lambda c: TRICK_CITIES[c])
         return weather_table
 
     def _normalize_record(self, record):
-        if record['date'][:4] !='2016': #Hard code Trick here
+        if record['date'][:4] != '2016': #Hard code Trick here
             return
         record = record.to_dict()
         self.weathers.add_entity(**record)
