@@ -2,14 +2,15 @@
 
 """
 import argparse
+import json
 import os
+
 import pandas as pd
 
 from .accident import AccidentNormalizer
 from .flight_delay import FlightDelayNormalizer
 from .gun_violence import GunViolenceNormalizer
 from .weather import WeatherNormalizer
-
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--dataset', type=str, default='../dataset_test',
@@ -50,12 +51,17 @@ if __name__ == '__main__':
     weathers = weather_normalier.normalize(dataset_helper(weather))[0]
     weathers.to_csv()
 
+    # Hard code modification. Very ugly!!!
     accident_csv = pd.read_csv('../normalized_dataset/accidents')
     accident_csv['start_time'] = pd.to_datetime(accident_csv['start_time'])
     accident_csv['end_time'] = pd.to_datetime(accident_csv['end_time'])
+    accident_csv['visibility'] = accident_csv['visibility'].fillna(10.0)
+    accident_csv['weather_condition'] = accident_csv['weather_condition'].fillna('Unknown')
 
     incident_csv = pd.read_csv('../normalized_dataset/incidents')
     incident_csv['date'] = pd.to_datetime(incident_csv['date'])
+    incident_csv['participants'] = \
+        incident_csv['participants'].apply(lambda s: json.dumps(eval(s)))
 
     weather_csv = pd.read_csv('../normalized_dataset/weathers')
     weather_csv['date'] = pd.to_datetime(weather_csv['date'])
@@ -65,4 +71,3 @@ if __name__ == '__main__':
     weather_csv.to_csv('../normalized_dataset/Weathers', index=False)
     accident_csv.to_csv('../normalized_dataset/Accidents', index=False)
     incident_csv.to_csv('../normalized_dataset/Incidents', index=False)
-

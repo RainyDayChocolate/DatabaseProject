@@ -86,9 +86,9 @@ class FlightDelayNormalizer(Normalizer):
             return
         if arrive_cities[0] not in TRICK_CITIES:
             return
-        if TRICK_CITIES[departure_cities[0]] != record['DEST_STATE_NM']:
+        if TRICK_CITIES[departure_cities[0]] != record['ORIGIN_STATE_NM']:
             return
-        if TRICK_CITIES[arrive_cities[0]] != record['ORIGIN_STATE_NM']:
+        if TRICK_CITIES[arrive_cities[0]] != record['DEST_STATE_NM']:
             return
         self._normalize_location_airport(cities=departure_cities,
                                          state=record['ORIGIN_STATE_NM'],
