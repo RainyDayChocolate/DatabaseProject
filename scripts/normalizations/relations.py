@@ -14,7 +14,10 @@ class Relation:
         if '_values_names' in self.__dict__:
             columns += self._values_names
         if isinstance(self.table, set):
-            table = DataFrame(self.table, columns=columns)
+            try:
+                table = DataFrame(self.table, columns=columns)
+            except:
+                import pdb; pdb.set_trace()
         elif isinstance(self.table, dict):
             helper = [key + value
                       for key, value in self.table.items()]
@@ -80,15 +83,15 @@ class Airports(Relation):
 
     def __init__(self):
         self.table = set()
-        self._keys_names = ('city', 'state_abr', 'airport')
+        self._keys_names = ('city', 'state', 'airport')
 
     def add_entity(self, city=None,
-                         state_abr=None,
+                         state=None,
                          airport=None):
-        self.table.add((city, state_abr, airport))
+        self.table.add((city, state, airport))
 
-    def is_key_in(self, city, state_abr, airport):
-        return (city, state_abr, airport) in self.table
+    def is_key_in(self, city, state, airport):
+        return (city, state, airport) in self.table
 
 
 class Delays(Relation):
@@ -121,7 +124,8 @@ class Flights(Relation):
                          flight_num,
                          dep, arr):
         values = (carrier, flight_num, dep, arr)
-        self.table.add(values)
+        if values not in self.table:
+            self.table.add(values)
         # Hard code for chunksize............
         self.auto_save()
 
@@ -134,6 +138,7 @@ class FlightsOperations(Relation):
         self._values_names = ('flight_operation_id',
                               'carrier',
                               'flight_num',
+                              'dep', 'arr',
                               'crs_dep_date', 'dep_date',
                               'crs_arr_date', 'arr_date',
                               'crs_elapsed_time',
@@ -143,6 +148,7 @@ class FlightsOperations(Relation):
 
     def add_entity(self, carrier,
                          flight_num,
+                         dep, arr,
                          crs_dep_date,
                          dep_date,
                          crs_arr_date,
@@ -153,6 +159,7 @@ class FlightsOperations(Relation):
                          distance):
 
         values = (self.index, carrier, flight_num,
+                  dep, arr,
                   crs_dep_date, dep_date,
                   crs_arr_date, arr_date,
                   crs_elapsed_time, actual_elapsed_time,

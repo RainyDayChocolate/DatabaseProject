@@ -6,4 +6,3 @@ CREATE USER project WITH PASSWORD 'project';
 
 GRANT ALL PRIVILEGES ON DATABASE project TO project;
 ALTER USER project SET search_path = project;
-
