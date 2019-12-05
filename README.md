@@ -1,22 +1,57 @@
-# DatabaseProject
+DataBase Schema Structure and Update
 
-+ **Weather(Nov 12-Nov 17)**
++ FlightDelay Dataset
 
-    https://www.kaggle.com/selfishgene/historical-hourly-weather-data#humidity.csv
+  + ormalization
+    + Location(City, State, StateAbbrivate)
+    + Airport(**AirportId, LocationID**)（JFK, New York City, NY） _Some airports would serves many cities around it_.
+    + Flight(**FlightNum, Depature\_Airport, Arrive\_Airport**, Carrier)
+    + DelayReasons(**ReasonId**, Reason)
+    + FlightTimeTable(**ID**, Date, Flight\_Num, Depature\_Airport, Depature\_Time, Arrive\_Airport, Arrive\_Time, Crs_elapsed_time, Actual_elapsed_time)
+    + DelayTime(**ID**, **ReasonID **, Delay\_Time)
+  + Constraint
+    + **Airport** LocationId $\rightarrow$Location **LocationId**
+    + **DelayTime** Id $\rightarrow$ **FlightTimeTable** ID
+    + **DelayTime** ReasonID$\rightarrow$ **DelayReasons**.ReasonID
+    + **FlightTimeTable**.Depature\_Airport,  Arrive\_Airport$\rightarrow$ Airport.ID
 
-+ **Accident(February 2016 to March 2019)**
++ Gun Violence Dataset
 
-    https://www.kaggle.com/sobhanmoosavi/us-accidents
+  + Normalization
 
-+ **Flight Delay( January, August, November, and December of 2016)**
+    + Location(Reuse Flight Dataset Location)
 
-    https://www.kaggle.com/niranjan0272/us-flight-delay
+    + Incident(**Id**, LocationId, gDate,  address, n\_killed, n\_injured, gun\_stolen, gun\_type, n_guns_involved, participants：
 
-+ **America Gun Violence**
+      [{'**name**': XX, '**gender**': XX, '**Age**': XX, '**Age_Group**': XX, '**type**': victim or suspect,
 
-    https://www.kaggle.com/ericking310/us-gun-violence#gun-violence-data_01-2013_03-2018.csv
+      ​	,'Status': [Arrest, Injuried, Dead...]}, ...]
 
-#
-```
-    UNDO
-```
+      **Part of NonRelationship Database**
+
+  + Constraint
+
+    + Gender, Type, Status should be fall in Enumerates
+    + Injured, n_killed should less than the amount of participants.
+    + Participants should not be empty.
+
++ Weather
+
+  + Normalization
+    + Weather(**LocationId**, **Date**, Humidity, Pressure, Temperature, Wind_Speed, Wind_Direction, Weather_Description)
+  + Constraint
+    + State, City should be restricted in Location
+    + Temperature, Wind_Speed should not be negative.
+
++ Accident
+
+  + Normalization
+    + Location(Reuse Flight Dataset Location)
+    + Accident(**ID**, **LocationId**, Severity, Start_Time, End_Time, Distance, Street, Side, Visibility, Sunrise_Sunset)
+    + Annotations(**AnnaotationID**, Annotation)
+    + POI_annotation(**ID**, AnnaotationID)
+  + Constraint
+    + POI_annotation.AnnaotationID should be fall in Annotations
+    + Source 
+
+  
