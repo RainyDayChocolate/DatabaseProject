@@ -1,16 +1,15 @@
 DROP SCHEMA IF EXISTS project CASCADE;
-
 CREATE SCHEMA project;
--- GRANT ALL PRIVILEGES ON SCHEMA;
--- The most important thing here is. We should modify 
+
 CREATE TABLE Locations(
     city varchar(31),
     state_abr char(2),
-    state varchar(31)
+    state varchar(31),
+    unique (city, state)
     );
 
 CREATE TABLE Accidents(
-    accident_id varchar(16),
+    accident_id varchar(16) primary key,
     city varchar(31),
     state varchar(31),
     street text,
@@ -22,31 +21,34 @@ CREATE TABLE Accidents(
     visibility decimal(3),
     weather_condition text,
     sunrise_sunset varchar(5),
-    primary key(accident_id)
+    foreign key (city, state)
+        references Locations(city, state)
     );
 
+
 CREATE TABLE AccidentAnnotations(
-    accident_id varchar(16) references Accidents(accident_id),
+    accident_id varchar(16)
+        references Accidents(accident_id),
     annotation varchar(16)
     );
 
+
 CREATE TABLE Airports(
     city varchar(31),
-    state_abr char(2),
+    state varchar(31),
     airport char(3),
-    primary key(airport)
+    primary key (airport),
+    foreign key (city, state)
+        references Locations (city, state)
     );
 
-CREATE TABLE Flights(
-    carrier char(2),
-    flight_num varchar(4),
-    dep char(3) references Airports (airport),
-    arr char(3) references Airports (airport));
 
 CREATE TABLE FlightsOperations(
-    flight_operation_id int  ,
+    flight_operation_id int primary key,
     carrier char(2),
     flight_num varchar(4),
+    dep char(3) references Airports(airport),
+    arr char(3) references Airports(airport),
     crs_dep_date timestamp,
     dep_date timestamp,
     crs_arr_date timestamp,
@@ -54,13 +56,17 @@ CREATE TABLE FlightsOperations(
     crs_elapsed_time decimal(5),
     actual_elapsed_time decimal(5),
     air_time decimal(5),
-    distance decimal(5),
-    primary key (flight_operation_id));
+    distance decimal(5) check(distance > 0)
+    );
+
 
 CREATE TABLE Delays(
-    flight_operation_id int references FlightsOperations(flight_operation_id),
+    flight_operation_id int
+        references FlightsOperations(flight_operation_id),
     delay_reason varchar(15),
-    delay decimal(5));
+    delay decimal(5)
+    );
+
 
 CREATE TABLE Incidents(
     incident_id int,
@@ -69,10 +75,13 @@ CREATE TABLE Incidents(
     state varchar(31),
     address text,
     state_house_district int,
-    killed_num int,
-    injured_num int,
-    n_guns_involved int,
-    participants json);
+    killed_num int check(killed_num >=0 ),
+    injured_num int check(injured_num >= 0),
+    n_guns_involved int check(n_guns_involved >= 0),
+    foreign key(city, state)
+        references Locations(city, state)
+    );
+
 
 CREATE TABLE Weathers(
     city varchar(31),
@@ -80,8 +89,14 @@ CREATE TABLE Weathers(
     date timestamp,
     humidity float,
     pressure float,
-    temperature float,
+    temperature decimal(3),
     wind_speed float,
     wind_direction float,
-    weather_description text);
+    weather_description text,
+    foreign key(city, state)
+        references Locations(city, state)
+);
 
+
+GRANT ALL PRIVILEGES ON Locations, Accidents, AccidentAnnotations,
+Airports, FlightsOperations, Delays, Incidents, Weathers TO project;

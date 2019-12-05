@@ -4,7 +4,9 @@
 import argparse
 import json
 import os
+from xml.dom.minidom import parseString
 
+import dicttoxml
 import pandas as pd
 
 from .accident import AccidentNormalizer
@@ -15,20 +17,19 @@ from .weather import WeatherNormalizer
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--dataset', type=str, default='../dataset_test',
                      help='The main path of whole datas')
+args = parser.parse_args()
+dataset = args.dataset
 
 
-if __name__ == '__main__':
-    args = parser.parse_args()
-    dataset = args.dataset
+def normalize(datast):
 
     dataset_helper = lambda p: os.path.join(dataset, p)
 
     flight = 'flight_data.csv'
     flight_normalizer = FlightDelayNormalizer()
-    locations, airports, flights, delays, flight_operations = \
+    locations, airports, delays, flight_operations = \
         flight_normalizer.normalize(dataset_helper(flight))
     airports.to_csv()
-    flights.to_csv()
     delays.to_csv()
     flight_operations.to_csv()
 
@@ -51,6 +52,7 @@ if __name__ == '__main__':
     weathers = weather_normalier.normalize(dataset_helper(weather))[0]
     weathers.to_csv()
 
+def refresh():
     # Hard code modification. Very ugly!!!
     accident_csv = pd.read_csv('../normalized_dataset/accidents')
     accident_csv['start_time'] = pd.to_datetime(accident_csv['start_time'])
@@ -61,13 +63,34 @@ if __name__ == '__main__':
     incident_csv = pd.read_csv('../normalized_dataset/incidents')
     incident_csv['date'] = pd.to_datetime(incident_csv['date'])
     incident_csv['participants'] = \
-        incident_csv['participants'].apply(lambda s: json.dumps(eval(s)))
+        incident_csv['participants'].apply(lambda s: eval(s))
+
+    helper = incident_csv.set_index(['incident_id'])
+    helper = helper['participants']
+    partipants_dict = helper.to_dict()
+    partipants_dict = [{'incident_id': _id, 'participants': participant}
+                        for _id, participant in partipants_dict.items()]
+
+    my_item_func = lambda x: x[:-1]
+    xml = dicttoxml.dicttoxml(partipants_dict,
+                              custom_root='incident_participants',
+                              attr_type=True,
+                              item_func=my_item_func)
+    pretty_xml = parseString(xml).toprettyxml()
+    with open("../normalized_dataset/incident_participants.xml", "w") as f:
+        f.write(pretty_xml)
 
     weather_csv = pd.read_csv('../normalized_dataset/weathers')
     weather_csv['date'] = pd.to_datetime(weather_csv['date'])
-
+    weather_csv['temperature'] = \
+        weather_csv['temperature'].apply(lambda s: 32 + (s - 273) * 1.8)
     location_csv = pd.read_csv('../normalized_dataset/locations')
 
     weather_csv.to_csv('../normalized_dataset/Weathers', index=False)
     accident_csv.to_csv('../normalized_dataset/Accidents', index=False)
     incident_csv.to_csv('../normalized_dataset/Incidents', index=False)
+
+
+if __name__ == '__main__':
+    normalize(dataset)
+    refresh()

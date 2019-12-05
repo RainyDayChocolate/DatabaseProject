@@ -5,9 +5,10 @@ import os
 import pandas as pd
 import psycopg2
 import psycopg2.extras
+from lxml import etree
 
 
-class App():
+class Loader():
 
     def __init__(self):
         """Parent class that
@@ -21,13 +22,19 @@ class App():
 
         self.conn = psycopg2.connect(connection_string,
                                      cursor_factory=psycopg2.extras.DictCursor)
-
         with self.conn.cursor() as cursor:
             with open('./sqls/app_schema.sql', 'r') as project_schema:
                 setup_queries = project_schema.read()
                 cursor.execute(setup_queries)
 
             self.conn.commit()
+
+        xml_file = './xmls/incident_participants.xml'
+        parser = etree.XMLParser(ns_clean=True)
+        self.tree = etree.parse(xml_file, parser)
+
+    def run_query(self, query):
+        return self.tree.xpath(query)
 
     def load_data(self, path='../normalized_dataset'):
         # The sequence of this table should be determined by
@@ -36,7 +43,6 @@ class App():
                       'accidents',
                       'accidentannotations',
                       'airports',
-                      'flights',
                       'flightsoperations',
                       'delays',
                       'incidents',
@@ -47,22 +53,20 @@ class App():
             csv_table_path = os.path.join(path, csv_table)
             if csv_table == 'incidents':
                 incidents = pd.read_csv(csv_table_path)
-         #       incidents['participants'] = \
-         #           incidents['participants'].apply(lambda s: eval(s))
+                incidents = incidents.drop(columns=['participants'])
                 query = "insert into incidents values(" \
-                            + "%s, " * 9 + "%s)"
+                            + "%s, " * 8 + "%s)"
                 for _, record in incidents.iterrows():
                     cur.execute(query, record.values)
+
             else:
                 with open(csv_table_path, 'r') as f:
                     next(f) # Skip the header row.
                     cur.copy_from(f, csv_table, sep=',')
+
             self.conn.commit()
 
-    def query(self, query, parameters=()):
-        cursor = self.conn.cursor()
-        cursor.execute(query, parameters)
-        return cursor.fetchall()
 
-app = App()
-app.load_data()
+if __name__ == '__main__':
+    app = Loader()
+    app.load_data()

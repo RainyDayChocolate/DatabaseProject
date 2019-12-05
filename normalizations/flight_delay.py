@@ -17,12 +17,10 @@ class FlightDelayNormalizer(Normalizer):
         super().__init__()
         self.locations = locations if locations else Locations()
         self.airports = airports if airports else Airports()
-        self.flights = flights if flights else Flights()
         self.delays = delays if delays else Delays()
         self.flight_operations = flight_operations if flight_operations else FlightsOperations()
         self.relations = [self.locations, self.airports,
-                          self.flights, self.delays,
-                          self.flight_operations]
+                          self.delays, self.flight_operations]
 
         self.columns_kept = ['FL_DATE', 'UNIQUE_CARRIER', 'FL_NUM',
                              'ORIGIN', 'ORIGIN_CITY_NAME', 'ORIGIN_STATE_ABR', 'ORIGIN_STATE_NM',
@@ -40,16 +38,10 @@ class FlightDelayNormalizer(Normalizer):
                                       state_abr=location_params['state_abr'],
                                       state=location_params['state'])
             self.airports.add_entity(city=city,
-                                     state_abr=location_params['state_abr'],
+                                     state=location_params['state'],
                                      airport=location_params['airport'])
 
-    def _normalize_flight_and_flight_operation(self, record):
-        index = self.flights.index
-        self.flights.add_entity(carrier=record['UNIQUE_CARRIER'],
-                                flight_num=record['FL_NUM'],
-                                dep=record['ORIGIN'],
-                                arr=record['DEST'])
-
+    def _normalize_flight_operation(self, record):
         flight_date = record['FL_DATE']
         crs_dep_date = convert_timeint(flight_date, record['CRS_DEP_TIME'])
         dep_date = convert_timeint(flight_date, record['DEP_TIME'])
@@ -59,6 +51,8 @@ class FlightDelayNormalizer(Normalizer):
         flight_operation_id = self.flight_operations.index
         self.flight_operations.add_entity(carrier=record['UNIQUE_CARRIER'],
                                           flight_num=record['FL_NUM'],
+                                          dep=record['ORIGIN'],
+                                          arr=record['DEST'],
                                           crs_dep_date=crs_dep_date,
                                           dep_date=dep_date,
                                           crs_arr_date=crs_arr_date,
@@ -99,4 +93,4 @@ class FlightDelayNormalizer(Normalizer):
                                          state=record['DEST_STATE_NM'],
                                          state_abr=record['DEST_STATE_ABR'],
                                          airport=record['DEST'])
-        self._normalize_flight_and_flight_operation(record)
+        self._normalize_flight_operation(record)

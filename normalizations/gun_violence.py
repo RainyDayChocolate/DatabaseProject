@@ -28,6 +28,8 @@ def add_client_message(information_table,
     for parti_id, record  in records_dict.items():
         if tag == 'age':
             record = eval(record)
+        if tag == 'status':
+            record = [rec.strip(' ') for rec in record]
         information_table[int(parti_id)][tag] = record
 
 
