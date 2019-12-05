@@ -33,9 +33,6 @@ class Loader():
         parser = etree.XMLParser(ns_clean=True)
         self.tree = etree.parse(xml_file, parser)
 
-    def run_query(self, query):
-        return self.tree.xpath(query)
-
     def load_data(self, path='../normalized_dataset'):
         # The sequence of this table should be determined by
         # constraints of all relations
