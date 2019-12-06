@@ -33,7 +33,7 @@ class Relation:
         relation_name = relation_name.lower()
         if not path:
             # Hard code for the path, lazy to optimize.
-            data_dir = '../normalized_dataset'
+            data_dir = './normalized_dataset'
             if not os.path.exists(data_dir):
                 os.mkdir(data_dir)
 
