@@ -22,18 +22,18 @@ class Loader():
 
         self.conn = psycopg2.connect(connection_string,
                                      cursor_factory=psycopg2.extras.DictCursor)
-        with self.conn.cursor() as cursor:
-            with open('./sqls/app_schema.sql', 'r') as project_schema:
-                setup_queries = project_schema.read()
-                cursor.execute(setup_queries)
-
-            self.conn.commit()
-
         xml_file = './xmls/incident_participants.xml'
         parser = etree.XMLParser(ns_clean=True)
         self.tree = etree.parse(xml_file, parser)
 
-    def load_data(self, path='../normalized_dataset'):
+    def create_schema(self):
+        with self.conn.cursor() as cursor:
+            with open('./sqls/app_schema.sql', 'r') as project_schema:
+                setup_queries = project_schema.read()
+                cursor.execute(setup_queries)
+            self.conn.commit()
+
+    def load_data(self, path='./normalized_dataset'):
         # The sequence of this table should be determined by
         # constraints of all relations
         csv_tables = ['locations',
@@ -66,4 +66,5 @@ class Loader():
 
 if __name__ == '__main__':
     app = Loader()
+    app.create_schema()
     app.load_data()

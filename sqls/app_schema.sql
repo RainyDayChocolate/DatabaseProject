@@ -1,3 +1,5 @@
+
+--TODO CREATE INDEX for tables
 DROP SCHEMA IF EXISTS project CASCADE;
 CREATE SCHEMA project;
 
@@ -55,7 +57,7 @@ CREATE TABLE FlightsOperations(
     arr_date timestamp,
     crs_elapsed_time decimal(5),
     actual_elapsed_time decimal(5),
-    air_time decimal(5),
+    air_time decimal(5) check(air_time >= 0),
     distance decimal(5) check(distance > 0)
     );
 
@@ -64,7 +66,7 @@ CREATE TABLE Delays(
     flight_operation_id int
         references FlightsOperations(flight_operation_id),
     delay_reason varchar(15),
-    delay decimal(5)
+    delay decimal(5) check(delay > 0)
     );
 
 
