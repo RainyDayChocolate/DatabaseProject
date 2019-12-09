@@ -1,8 +1,8 @@
 
-from .loads_data import Loader
+from .db_connect import Connector
 
 
-class Querier(Loader):
+class Querier(Connector):
 
     def __init__(self, **params):
         super().__init__(**params)
