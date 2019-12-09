@@ -16,9 +16,9 @@ in different cities.
     of weekdays.
 in (Input rain, snow, cloud) days.
 
-3.  The flight (arr or dep) number and accident occuracy in weekday(Input city)
+#3.  The flight (arr or dep) number and accident occuracy in weekday(Input city)
 
-4.  Average incident occurance along with(Input humidity, temperature, pressure)
+#4.  Average incident occurance along with(Input humidity, temperature, pressure)
     in city.
 """
 
@@ -34,7 +34,6 @@ class Explorations(Querier):
         super().__init__(**params)
 
     def get_delay_ratio(self, dep, arr):
-
         delay_query = """
                         select delay_reason,
                                sum(delay) / sum(sum(delay)) over() as delay_ratio
@@ -58,6 +57,9 @@ class Explorations(Querier):
 
     def get_carrier_delay_distribution(self, time_dimension, carrier):
         """Time dimension only be restricted within 'Hour and Week'
+        time_dimension: ) weekday
+                        1 hour
+        CARRIER
         """
         distribution_query = \
             """
@@ -92,7 +94,7 @@ class Explorations(Querier):
         result = tabulate(result, ['carrier', 'distance'])
         return result
 
-    def get_accident_street_side_ratio(self, city, state, K=5):
+    def get_accident_street(self, city, state, K=5):
         side_ratio_query = """
                             select street,
                                    count(accident_id) as accident_num
