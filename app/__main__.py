@@ -10,4 +10,5 @@ if __name__ == '__main__':
     print(explore.get_gun_dayofweek_occurance('Chicago', 'Illinois'))
     print(explore.get_suspect_arrested_ratio())
     print(explore.get_delay_weather_description('JFK'))
-    print(explore.get_avg_accident_with_weather('San Francisco', 'Rain'))
+    print(explore.get_avg_accident_with_weather('San Francisco', 'California', 'Rain'))
+    print(explore.get_accident_incident_severity())
