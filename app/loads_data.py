@@ -26,6 +26,7 @@ class Loader(Connector):
         # The sequence of this table should be determined by
         # constraints of all relations
         csv_tables = ['locations',
+                      'carriers',
                       'accidents',
                       'accidentannotations',
                       'airports',
