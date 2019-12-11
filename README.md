@@ -1,57 +1,71 @@
-DataBase Schema Structure and Update
+## Database System Final Project
 
-+ FlightDelay Dataset
+### Participants 
 
-  + ormalization
-    + Location(City, State, StateAbbrivate)
-    + Airport(**AirportId, LocationID**)（JFK, New York City, NY） _Some airports would serves many cities around it_.
-    + Flight(**FlightNum, Depature\_Airport, Arrive\_Airport**, Carrier)
-    + DelayReasons(**ReasonId**, Reason)
-    + FlightTimeTable(**ID**, Date, Flight\_Num, Depature\_Airport, Depature\_Time, Arrive\_Airport, Arrive\_Time, Crs_elapsed_time, Actual_elapsed_time)
-    + DelayTime(**ID**, **ReasonID **, Delay\_Time)
-  + Constraint
-    + **Airport** LocationId $\rightarrow$Location **LocationId**
-    + **DelayTime** Id $\rightarrow$ **FlightTimeTable** ID
-    + **DelayTime** ReasonID$\rightarrow$ **DelayReasons**.ReasonID
-    + **FlightTimeTable**.Depature\_Airport,  Arrive\_Airport$\rightarrow$ Airport.ID
+Charly Huang: huangc11@rpi.edu
 
-+ Gun Violence Dataset
+Kuangzheng Li: lik15@rpi.edu
 
-  + Normalization
+### Motivation
 
-    + Location(Reuse Flight Dataset Location)
+This DBMS stored several US turbulance data, including Four Kaggle Datasets
 
-    + Incident(**Id**, LocationId, gDate,  address, n\_killed, n\_injured, gun\_stolen, gun\_type, n_guns_involved, participants：
++ US Flight Delays
 
-      [{'**name**': XX, '**gender**': XX, '**Age**': XX, '**Age_Group**': XX, '**type**': victim or suspect,
+  https://www.kaggle.com/niranjan0272/us-flight-delay
 
-      ​	,'Status': [Arrest, Injuried, Dead...]}, ...]
++ US Gun Violence
 
-      **Part of NonRelationship Database**
+  https://www.kaggle.com/ericking310/us-gun-violence
 
-  + Constraint
++ US Accidents
 
-    + Gender, Type, Status should be fall in Enumerates
-    + Injured, n_killed should less than the amount of participants.
-    + Participants should not be empty.
+  https://www.kaggle.com/sobhanmoosavi/us-accidents
 
-+ Weather
++ Historical Hourly Weather Data
 
-  + Normalization
-    + Weather(**LocationId**, **Date**, Humidity, Pressure, Temperature, Wind_Speed, Wind_Direction, Weather_Description)
-  + Constraint
-    + State, City should be restricted in Location
-    + Temperature, Wind_Speed should not be negative.
+  https://www.kaggle.com/selfishgene/historical-hourly-weather-data#humidity.cs
 
-+ Accident
++ Several tiny datasets including US state abbrevation and Airline Code datasets also involved here.
 
-  + Normalization
-    + Location(Reuse Flight Dataset Location)
-    + Accident(**ID**, **LocationId**, Severity, Start_Time, End_Time, Distance, Street, Side, Visibility, Sunrise_Sunset)
-    + Annotations(**AnnaotationID**, Annotation)
-    + POI_annotation(**ID**, AnnaotationID)
-  + Constraint
-    + POI_annotation.AnnaotationID should be fall in Annotations
-    + Source 
+User could use self-guide command line interfaced app to explore within those datasets in a degree. 
 
-  
+### Installation
+
+This project relys on python3 and postgresql
+
+#### Environment Setting
+
+```shell
+brew install postgresql
+brew services start postgresql
+cd Final
+python3 -m venv venv3
+source ./venv3/bin/activate
+pip3 install requirement.txt
+tar -xzvf normalized_dataset.tar.gz
+tar -xzvf xmls.tar.gz
+```
+
+#### Normalization
+
+```
+python3 -m normalization "YOUR_ORIGINAL_DATASETS_DOWNLOADED_FROM_KAGGLE"
+```
+
+### Load Data
+
+```
+bash load_data.sh
+```
+
+#### App Start
+
+```
+bash launch_client_query_manager.sh
+```
+
+### Explorations Example
+
+
+
