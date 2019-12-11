@@ -27,6 +27,7 @@ from tabulate import tabulate
 
 from .querier import Querier
 
+float_to_percentage = lambda ratio: "{0:.2%}".format(ratio)
 
 class Explorations(Querier):
 
@@ -52,6 +53,8 @@ class Explorations(Querier):
                         order by delay_ratio;
                       """
         result = self.query_sql(delay_query, (dep, arr))
+        for record in result:
+            record[1] = float_to_percentage(record[1])
         result = tabulate(result, ['delay_reason', 'delay'])
         return result
 
@@ -78,7 +81,9 @@ class Explorations(Querier):
             """
         result = self.query_sql(distribution_query, (time_dimension,
                                                      carrier))
-        result = tabulate(result, [time_dimension, 'carrier'])
+        for record in result:
+            record[1] = float_to_percentage(record[1])
+        result = tabulate(result, [time_dimension, 'carrier_delay_ratio'])
         return result
 
     def get_carrier_avg_distance(self, airport):
@@ -129,7 +134,7 @@ class Explorations(Querier):
                             group by hour
                          """
         result = self.query_sql(severity_query, (city, state, weekday))
-        result = tabulate(result, ['hour', 'avg_severtiy'])
+        result = tabulate(result, ['hour', 'avg_severtiy'], floatfmt='.3f')
         return result
 
     def get_gun_dayofweek_occurance(self, city, state):
@@ -148,11 +153,11 @@ class Explorations(Querier):
                     order by dow
                     """
         result = self.query_sql(gun_query, (city, state))
+
         result = tabulate(result, ['dow', 'occurance'])
         return result
 
     def get_suspect_arrested_ratio(self, state='Texas'):
-
         incidents = """select incident_id
                        from incidents
                        where state = %s
@@ -176,6 +181,8 @@ class Explorations(Querier):
         suspect_count = self.query_xml(query_suspect)
         arrested_suspect_count = self.query_xml(query_suspect_arrested)
         result = [[state, arrested_suspect_count / suspect_count]]
+        for record in result:
+                    record[1] = float_to_percentage(record[1])
         result = tabulate(result, ['state', 'arrest_ratio'])
         return result
 
@@ -216,6 +223,8 @@ class Explorations(Querier):
             """.format(dep_or_arr, dep_arr_date)
 
         result = self.query_sql(delay_weather_query, (delay, airport))
+        for record in result:
+            record[1] = float_to_percentage(record[1])
         result = tabulate(result, ['weather_description', 'ratio'])
         return result
 #2.  The average delay (dep or arr) who has the most(largest proportion) long-time(input) accidents"
@@ -263,6 +272,8 @@ class Explorations(Querier):
                 """
         params = (city, state, city, state, weather, city, state)
         result = self.query_sql(accident_weather_query, params)
+        for record in result:
+            record[1] = float_to_percentage(record[1])
         result = tabulate(result, ['hour', 'ratio'])
         return result
 
@@ -289,8 +300,10 @@ class Explorations(Querier):
                 order by avg_sev
                 """
         result = self.query_sql(query)
-        result = tabulate(result, ['city', 'state', 'avg_accident_severity',
-                                  'avg_incident_severity', 'incident_occurance'])
+        result = tabulate(result,
+                          ['city', 'state', 'avg_accident_severity',
+                           'avg_incident_severity', 'incident_occurance'],
+                           floatfmt='.2f')
         return result
 
 
