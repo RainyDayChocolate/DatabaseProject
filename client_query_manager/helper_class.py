@@ -92,6 +92,10 @@ class Helper_class:
             airportAbbrList.append( abbr[0] )
         
         return airportAbbrList
+    
+    def get_city_and_state_tuple(self, city_and_state_string, pattern = ', '):
+        city_state_tuple = re.split(pattern, city_and_state_string)
+        return city_state_tuple[0], city_state_tuple[1]
 
 # PyInquirer related classes
 class NumberValidator(Validator):
