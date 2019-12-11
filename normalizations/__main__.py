@@ -92,5 +92,5 @@ def refresh():
 
 
 if __name__ == '__main__':
-    #normalize(dataset)
+    normalize(dataset)
     refresh()
