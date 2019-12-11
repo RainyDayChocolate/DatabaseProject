@@ -81,7 +81,7 @@ class Helper_class:
     
         return weather_list
     
-    def get_airport_and_abbr(self):
+    def get_carriers_and_abbr(self):
         sql_query = """
                     SELECT carrier, carrier_name
                     FROM carriers
