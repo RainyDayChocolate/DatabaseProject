@@ -17,7 +17,7 @@ class Specific_queries:
     def sendQueryReq(self, request):
         '''
         The request sent in as a phrase in the string format.
-        Look up the string phrase to its corresponding key, and 
+        Look up the string phrase to its corresponding key, and
         have the requested query executed.
         '''
         if request is Query_enum.ARRV_OR_DEP_DELAY_RATIO_AT_AIRPORT:
@@ -86,7 +86,7 @@ class Specific_queries:
             time_dimension_id = 0
         else:
             time_dimension_id = 1
-        
+
         # Set up carrier
         # TODO Correspondence of carrier full name to abbrevition relation
         carrier_abbr = 'AA'
@@ -159,13 +159,13 @@ class Specific_queries:
 
         day_id = None
         day_dict = {
-            {'Monday'       : 1},
-            {'Tuesday'      : 2},
-            {'Wednesday'    : 3},
-            {'Thursday'     : 4},
-            {'Friday'       : 5},
-            {'Saturday'     : 6},
-            {'Sunday'       : 7}
+            'Monday'       : 1,
+            'Tuesday'      : 2,
+            'Wednesday'    : 3,
+            'Thursday'     : 4,
+            'Friday'       : 5,
+            'Saturday'     : 6,
+            'Sunday'       : 7
         }
 
         day_id = day_dict[day_of_week]
@@ -228,7 +228,7 @@ class Specific_queries:
 
         is_departure = resp['is_departure_flight']
         delay_minutes = resp['delay_minutes']
-        
+
         airportAbrList = self.helper.get_all_airports_abbr()
         airport = None
         if is_departure:
@@ -251,10 +251,10 @@ class Specific_queries:
                 }
             ])
             airport = to_which_airport['arrival_airport']
-        
+
         answer = self.explorer.get_delay_weather_description(airport, is_departure, delay_minutes)
         print(answer)
-            
+
 
     def prop_acidents_due_to_weather_vs_all(self):
         cityAndStateList = self.helper.get_all_cities_and_states_list()
