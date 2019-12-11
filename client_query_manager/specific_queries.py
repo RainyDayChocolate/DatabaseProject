@@ -129,7 +129,7 @@ class Specific_queries:
             }
         ])
 
-        city, state = resp['city_and_state'].split()[0], resp['city_and_state'].split()[1]
+        city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
         limit_items_num = resp['limit_items']
 
         answer = self.explorer.get_accident_street_side_ratio(city, state, limit_items_num)
@@ -153,7 +153,7 @@ class Specific_queries:
             }
         ])
 
-        city, state = resp['city_and_state'].split()[0], resp['city_and_state'].split()[1]
+        city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
         day_of_week = resp['day_of_week']
 
         day_id = None
@@ -189,7 +189,7 @@ class Specific_queries:
             }
         ])
 
-        city, state = resp['city_and_state'].split()[0], resp['city_and_state'].split()[1]
+        city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
 
         answer = self.explorer.get_gun_dayofweek_occurance(city, state)
         print(answer)
@@ -207,7 +207,7 @@ class Specific_queries:
             }
         ])
 
-        city, state = resp['city_and_state'].split()[0], resp['city_and_state'].split()[1]
+        city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
         print('State : {}'.format(state))
         answer = self.explorer.get_suspect_arrested_ratio(state)
         print(answer)
@@ -279,7 +279,7 @@ class Specific_queries:
             }
         ])
 
-        city, state = resp['city_and_state'].split()[0], resp['city_and_state'].split()[1]
+        city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
         weather_cond = resp['weather_condition']
 
         answer = self.explorer.get_avg_accident_with_weather(city, state, weather_cond)
