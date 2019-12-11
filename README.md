@@ -1,6 +1,6 @@
 ## Database System Final Project
 
-### Participants 
+### Participants
 
 Charly Huang: huangc11@rpi.edu
 
@@ -28,7 +28,7 @@ This DBMS stored several US turbulance data, including Four Kaggle Datasets
 
 + Several tiny datasets including US state abbrevation and Airline Code datasets also involved here.
 
-User could use self-guide command line interfaced app to explore within those datasets in a degree. 
+User could use self-guide command line interfaced app to explore within those datasets in a degree.
 
 ### Installation
 
@@ -42,7 +42,7 @@ brew services start postgresql
 cd Final
 python3 -m venv venv3
 source ./venv3/bin/activate
-pip3 install requirement.txt
+pip3 install -r requirements.txt
 tar -xzvf normalized_dataset.tar.gz
 tar -xzvf xmls.tar.gz
 ```

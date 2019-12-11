@@ -6,9 +6,9 @@ Please run with:
 python3 -m client_query_manager
 '''
 
-if __name__=='__main__':
-    print('client_query_manager is launched!!')
 
+def start_a_query():
+    print('client_query_manager is launched!!')
     # Choose the type of queries
     type_of_query = ['About the career flights from / to airport in the US',
                      'About US accident occurences',
@@ -33,7 +33,7 @@ if __name__=='__main__':
         queryMutex.set_query_type(Query_type.US_ACCIDENT_OCURRENCE)
     elif query_type == type_of_query[2] :
         queryMutex.set_query_type(Query_type.US_GUN_VIOLENCE)
-    
+
     queryList = queryMutex.getQueryList()
 
     # Ask for specific query
@@ -47,9 +47,9 @@ if __name__=='__main__':
     ])
     queryMutex.get_query_request( resp['specific_query'] )
 
-    
-    
 
-    
+if __name__=='__main__':
+    while True:
+        start_a_query()
 
-    
+
