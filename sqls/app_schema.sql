@@ -10,6 +10,12 @@ CREATE TABLE Locations( -- add unneccsary information.
     unique (city, state)
     );
 
+CREATE TABLE Carriers(
+    carrier char(2),
+    carrier_name varchar(31),
+    unique (carrier)
+    );
+
 CREATE INDEX city_name
 ON Locations(city);
 
@@ -54,7 +60,7 @@ CREATE TABLE Airports(
 
 CREATE TABLE FlightsOperations(
     flight_operation_id int primary key,
-    carrier char(2),
+    carrier char(2) references Carriers(carrier),
     flight_num varchar(4),
     dep char(3) references Airports(airport),
     arr char(3) references Airports(airport),
@@ -116,4 +122,4 @@ CREATE INDEX idx_city_date_weather
 ON Weathers(date, city);
 
 GRANT ALL PRIVILEGES ON Locations, Accidents, AccidentAnnotations,
-Airports, FlightsOperations, Delays, Incidents, Weathers TO project;
+Airports, FlightsOperations, Delays, Incidents, Weathers,Carriers TO project;
