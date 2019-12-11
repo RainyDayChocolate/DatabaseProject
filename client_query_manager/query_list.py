@@ -71,9 +71,9 @@ class Query_list:
             Query_enum.RATIO_OF_GUN_VIOLENCE_SUSPECTS_TO_ALL_SUSPECTS : question2
         }
 
-        self.queryList [question1,
-                        question2
-                       ]
+        self.queryList = [  question1,
+                            question2
+                         ]
 
 
     def getQueryHashTable(self):
