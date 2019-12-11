@@ -62,7 +62,7 @@ bash load_data.sh
 #### App Start
 
 ```
-bash launch_client_query_manager.sh
+bash app.sh
 ```
 
 ### Exploration Examples
