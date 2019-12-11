@@ -8,7 +8,6 @@ from app.explorations import Explorations
 
 class Specific_queries:
     query_table = dict()
-    queryResp = None
     helper = Helper_class()
     explorer = Explorations()
 
@@ -289,6 +288,3 @@ class Specific_queries:
     def get_accident_incident_severity(self):
         answer = self.explorer.get_accident_incident_severity()
         print(answer)
-
-    def getQueryResp(self):
-        return self.queryResp
