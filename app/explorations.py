@@ -16,9 +16,9 @@ in different cities.
     of weekdays.
 in (Input rain, snow, cloud) days.
 
-3.  The flight (arr or dep) number and accident occuracy in weekday(Input city)
+#3.  The flight (arr or dep) number and accident occuracy in weekday(Input city)
 
-4.  Average incident occurance along with(Input humidity, temperature, pressure)
+#4.  Average incident occurance along with(Input humidity, temperature, pressure)
     in city.
 """
 
@@ -34,7 +34,6 @@ class Explorations(Querier):
         super().__init__(**params)
 
     def get_delay_ratio(self, dep, arr):
-
         delay_query = """
                         select delay_reason,
                                sum(delay) / sum(sum(delay)) over() as delay_ratio
@@ -56,9 +55,13 @@ class Explorations(Querier):
         result = tabulate(result, ['delay_reason', 'delay'])
         return result
 
-    def get_carrier_delay_distribution(self, time_dimension, carrier):
+    def get_carrier_delay_distribution(self, is_hour, carrier):
         """Time dimension only be restricted within 'Hour and Week'
+        time_dimension: ) weekday
+                        1 hour
+        CARRIER
         """
+        time_dimension = 'hour' if is_hour else 'ISODOW'
         distribution_query = \
             """
             select dep_datepart,
@@ -75,7 +78,7 @@ class Explorations(Querier):
             """
         result = self.query_sql(distribution_query, (time_dimension,
                                                      carrier))
-        result = tabulate(result, ['time_dimension', 'carrier'])
+        result = tabulate(result, [time_dimension, 'carrier'])
         return result
 
     def get_carrier_avg_distance(self, airport):
@@ -92,7 +95,7 @@ class Explorations(Querier):
         result = tabulate(result, ['carrier', 'distance'])
         return result
 
-    def get_accident_street_side_ratio(self, city, state, K=5):
+    def get_accident_street(self, city, state, K=5):
         side_ratio_query = """
                             select street,
                                    count(accident_id) as accident_num
@@ -110,12 +113,12 @@ class Explorations(Querier):
         result = tabulate(result, ['street', 'accident_num'])
         return result
 
-    def get_avg_severity(self, city, state, weekday=2):
+    def get_avg_severity(self, city, state, weekday='Mon'):
         severity_query = """select hour,
                                    avg(severity) as avg_severity
                             from(
                                 select date_part('hour', start_time) as hour,
-                                    date_part('dow',  start_time) as dow,
+                                    date_part('ISODOW',  start_time) as dow,
                                     severity
                                 from
                                     accidents
@@ -134,7 +137,7 @@ class Explorations(Querier):
         gun_query = """
                     select dow, count(incident_id) as occurance
                     from(
-                        select date_part('dow', date) as dow,
+                        select date_part('ISODOW', date) as dow,
                                 incident_id
                         from
                             incidents
@@ -217,8 +220,7 @@ class Explorations(Querier):
         return result
 #2.  The average delay (dep or arr) who has the most(largest proportion) long-time(input) accidents"
 
-    def get_avg_accident_with_weather(self, city, weather):
-        #TODO finish the state part.
+    def get_avg_accident_with_weather(self, city, state, weather):
         accident_weather_query =\
             """
                 select hour_weather_acc.hour,
@@ -234,13 +236,15 @@ class Explorations(Querier):
                                 date_trunc('hour', start_time) as hour_date
                             from
                                 accidents
-                            where city = %s) city_accident
+                            where city = %s and
+                                  state = %s) city_accident
                         join
                             (select weather_description,
                                 date
                             from
                                 weathers
                             where city = %s and
+                                  state = %s and
                                 weather_description ~* %s) certain_weather
                         on city_accident.hour_date = certain_weather.date) city_weather_accidents
                     group by hour) hour_weather_acc
@@ -251,15 +255,46 @@ class Explorations(Querier):
                                 accident_id
                         from
                             accidents
-                        where city = %s) hour_accident
+                        where city = %s and
+                              state = %s) hour_accident
                     group by hour) city_accidents
                 on hour_weather_acc.hour = city_accidents.hour
                 order by hour asc;
                 """
-        params = (city, city, weather, city)
+        params = (city, state, city, state, weather, city, state)
         result = self.query_sql(accident_weather_query, params)
         result = tabulate(result, ['hour', 'ratio'])
         return result
+
+    def  get_accident_incident_severity(self):
+
+        query = """
+                select avg_acc_severity.city, avg_acc_severity.state,
+                       avg_sev, avg_incident_sev, incident_occurance
+                from
+                    (select city, state,
+                        avg(severity) as avg_sev
+                    from
+                        accidents
+                    group by (city, state)) avg_acc_severity
+                join(
+                    select city, state,
+                        avg(killed_num) + avg(injured_num) as avg_incident_sev,
+                        count(incident_id) as incident_occurance
+                    from
+                        incidents
+                    group by (city, state)) avg_inc_severity
+                on avg_acc_severity.city = avg_inc_severity.city and
+                   avg_acc_severity.state = avg_inc_severity.state
+                order by avg_sev
+                """
+        result = self.query_sql(query)
+        result = tabulate(result, ['city', 'state', 'avg_accident_severity',
+                                  'avg_incident_severity', 'incident_occurance'])
+        return result
+
+
+
 
 
 

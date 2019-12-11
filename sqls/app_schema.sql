@@ -3,12 +3,15 @@
 DROP SCHEMA IF EXISTS project CASCADE;
 CREATE SCHEMA project;
 
-CREATE TABLE Locations(
+CREATE TABLE Locations( -- add unneccsary information.
     city varchar(31),
     state_abr char(2),
     state varchar(31),
     unique (city, state)
     );
+
+CREATE INDEX city_name
+ON Locations(city);
 
 CREATE TABLE Accidents(
     accident_id varchar(16) primary key,
@@ -27,6 +30,8 @@ CREATE TABLE Accidents(
         references Locations(city, state)
     );
 
+CREATE INDEX idx_city
+on Accidents(city);
 
 CREATE TABLE AccidentAnnotations(
     accident_id varchar(16)
@@ -34,6 +39,8 @@ CREATE TABLE AccidentAnnotations(
     annotation varchar(16)
     );
 
+CREATE INDEX idx_annotation
+ON AccidentAnnotations(annotation);
 
 CREATE TABLE Airports(
     city varchar(31),
@@ -61,6 +68,8 @@ CREATE TABLE FlightsOperations(
     distance decimal(5) check(distance > 0)
     );
 
+CREATE INDEX idx_dep_arr
+ON FlightsOperations(dep, arr);
 
 CREATE TABLE Delays(
     flight_operation_id int
@@ -69,6 +78,8 @@ CREATE TABLE Delays(
     delay decimal(5) check(delay > 0)
     );
 
+CREATE INDEX reason_idx
+ON Delays(delay_reason);
 
 CREATE TABLE Incidents(
     incident_id int,
@@ -84,6 +95,8 @@ CREATE TABLE Incidents(
         references Locations(city, state)
     );
 
+CREATE INDEX idx_city_date_incidents
+ON Incidents(date, city);
 
 CREATE TABLE Weathers(
     city varchar(31),
@@ -99,6 +112,8 @@ CREATE TABLE Weathers(
         references Locations(city, state)
 );
 
+CREATE INDEX idx_city_date_weather
+ON Weathers(date, city);
 
 GRANT ALL PRIVILEGES ON Locations, Accidents, AccidentAnnotations,
 Airports, FlightsOperations, Delays, Incidents, Weathers TO project;
