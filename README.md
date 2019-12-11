@@ -117,8 +117,7 @@ weather_description      ratio
 heavy intensity rain         1
 ```
 
-#### Example 3: 
-
+#### Example 3: otal gun violence occurences on a particular day of the week
 
 What type of querry do you want? `About US gun violence`
 What is your particular query? `Total gun violence occurences on a particular day of the week`
