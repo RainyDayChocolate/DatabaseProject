@@ -213,22 +213,53 @@ class Specific_queries:
         answer = self.explorer.get_suspect_arrested_ratio(state)
         print(answer)
 
-    # TODO
     def prop_delay_by_weather_vs_all_delays(self):
-        airportAbrList = self.helper.get_airport_and_abbr()
-        
         resp = self.helper.getAnswersFromQuestionSet([
             {
                 'type' : 'confirm',
                 'name' : 'is_departure_flight',
                 'message' : 'Is it a departuring flight?',
                 'default' : False
+            },
+            {
+                'type' : 'input',
+                'name' : 'delay_minutes',
+                'message' : 'Search for dealays of how many minutes?',
+                'validate' : NumberValidator,
+                'default' : '20',
+                'filter' : lambda val : int(val)
             }
         ])
 
         is_departure = resp['is_departure_flight']
+        delay_minutes = resp['delay_minutes']
+        
+        airportAbrList = self.helper.get_all_airports_abbr()
+        airport = None
         if is_departure:
-            from_which_airport = 
+            from_which_airport = self.helper.getAnswersFromQuestionSet([
+                {
+                    'type' : 'list',
+                    'name' : 'departure_airport',
+                    'message' : 'Choose the airport of departure.',
+                    'choices' : airportAbrList
+                }
+            ])
+            airport = from_which_airport['departure_airport']
+        else:
+            to_which_airport = self.helper.getAnswersFromQuestionSet([
+                {
+                    'type' : 'list',
+                    'name' : 'arrival_airport',
+                    'message' : 'Choose the airport of departure.',
+                    'choices' : airportAbrList
+                }
+            ])
+            airport = to_which_airport['arrival_airport']
+        
+        answer = self.explorer.get_delay_weather_description(airport, is_departure, delay_minutes)
+        print(answer)
+            
 
     def prop_acidents_due_to_weather_vs_all(self):
         cityAndStateList = self.helper.get_all_cities_and_states_list()
