@@ -79,6 +79,19 @@ class Helper_class:
             airportAndAbbrList.update( {airport : abbr} )
         
         return airportAndAbbrList
+    
+    def get_all_airports_abbr(self):
+        sql_query = """
+                    SELECT airport
+                    FROM airports 
+                    """
+        airportAbbrList = []
+
+        inquirer = Querier()
+        for abbr in inquirer.query_sql( sql_query ):
+            airportAbbrList.append( abbr[0] )
+        
+        return airportAbbrList
 
 # PyInquirer related classes
 class NumberValidator(Validator):
