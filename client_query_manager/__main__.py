@@ -1,9 +1,5 @@
 from client_query_manager.query_mutex import *
-
-# GUI
-from client_query_manager import custom_style_3
-from PyInquirer import prompt
-from app.querier import Querier
+from client_query_manager.helper_class import Helper_class
 
 '''
 Please run with:
@@ -13,50 +9,22 @@ python3 -m client_query_manager
 if __name__=='__main__':
     print('client_query_manager is launched!!')
 
-    # City, State
-    sql_query = """
-                SELECT city, state
-                FROM locations ;
-                """
-    inquirer = Querier()
-    city_state_tuple = inquirer.query_sql(sql_query)
-
-    city_list = []
-    for city, state in city_state_tuple:
-        city_list.append( str(city + ', ' + state) )
-
-    city_attrb = 'city'
-    city_query = [
-        {
-            'type': 'list',
-            'name': city_attrb,
-            'message': 'Select the city to query',
-            'choices': city_list,
-            'filter': None
-        }
-    ] # End of questions
-
-    picked_city = prompt( city_query, style = custom_style_3 )
-
-    city_state_tuple = picked_city[ city_attrb ].split()
-    city, state = city_state_tuple[0], city_state_tuple[1]
-    
     # Choose the type of queries
     type_of_query = ['About the career flights from / to airport in the US',
                      'About US accident occurences',
                      'About US gun violence'
                     ]
-    what_is_your_query_type = [
+    helper = Helper_class()
+    resp = helper.getAnswersFromQuestionSet([
         {
             'type': 'rawlist',
             'name': 'type_of_queries',
             'message': 'What type of querry do you want?',
             'choices': type_of_query
         }
-    ]
+    ])
 
-    picked_query_type = prompt( what_is_your_query_type, style = custom_style_3 )
-    query_type = picked_query_type['type_of_queries']
+    query_type = resp['type_of_queries']
 
     queryMutex = Query_Mutex()
     if query_type == type_of_query[0]:
@@ -69,16 +37,15 @@ if __name__=='__main__':
     queryList = queryMutex.getQueryList()
 
     # Ask for specific query
-    what_is_your_query = [
+    resp = helper.getAnswersFromQuestionSet([
         {
             'type': 'list',
             'name': 'specific_query',
             'message': 'What is your particular query?',
             'choices': queryList
         }
-    ]
-    selected_query = prompt(what_is_your_query, style = custom_style_3)['specific_query']
-    queryMutex.get_query_request(selected_query)
+    ])
+    queryMutex.get_query_request( resp['specific_query'] )
 
     
     
