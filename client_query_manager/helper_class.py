@@ -22,21 +22,6 @@ class Helper_class:
     
     def getAnswersFromQuestionSet(self, question_set):
         return prompt( question_set, style = custom_style_3 )
-
-    def getAsnwerFromPrompt(self, Type, name, message, choices, Filter = None):
-        question = [
-            {
-                'type' : Type,
-                'name' : name,
-                'message' : message,
-                'choices' : choices,
-                'filter' : Filter
-            }
-        ]
-
-        response = prompt( question, style = custom_style_3 )
-
-        return response[ name ]
     
     def getAllStatesAndAbbr(self):
         inquirer = Querier()
