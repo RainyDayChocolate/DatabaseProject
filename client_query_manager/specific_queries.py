@@ -95,19 +95,20 @@ class Specific_queries:
         print(answer)
 
     def career_average_dist_from_airpport(self):
-        stateAndAbbrList = self.helper.getAllStatesAndAbbr()
-        stateAndAbbr = self.helper.getAnswersFromQuestionSet( [
+        airportAbbrList = self.helper.get_all_airports_abbr()
+        resp = self.helper.getAnswersFromQuestionSet( [
             {
                 'type' : 'list',
-                'name' : 'dep_state',
+                'name' : 'dep_airport',
                 'message' : 'Choose your departure state',
-                'choices' : stateAndAbbrList
+                'choices' : airportAbbrList
             }
         ])
 
-        dep_state_abbr = stateAndAbbr['dep_state'].split()[1]
+        dep_airport_abbr = resp['dep_airport']
 
-        answer = self.explorer.get_carrier_avg_distance(dep_state_abbr)
+        answer = self.explorer.get_carrier_avg_distance(dep_airport_abbr)
+        print(answer)
 
     def highest_accident_rate_on_street(self):
         citiesAndStatesList = self.helper.get_all_cities_and_states_list()
@@ -132,7 +133,7 @@ class Specific_queries:
         city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
         limit_items_num = resp['limit_items']
 
-        answer = self.explorer.get_accident_street_side_ratio(city, state, limit_items_num)
+        answer = self.explorer.get_accident_street(city, state, limit_items_num)
         print(answer)
 
     def average_accident_severity_in_city(self):
