@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from app.db_connect import Connector
+from database_operation.db_connect import Connector
 
 class Loader(Connector):
 
@@ -55,6 +55,6 @@ class Loader(Connector):
 
 
 if __name__ == '__main__':
-    app = Loader()
-    app.create_schema()
-    app.load_data()
+    loader = Loader()
+    loader.create_schema()
+    loader.load_data()

@@ -8,7 +8,6 @@ python3 -m client_query_manager
 
 
 def start_a_query():
-    print('client_query_manager is launched!!')
     # Choose the type of queries
     type_of_query = ['About the career flights from / to airport in the US',
                      'About US accident occurences',
@@ -50,6 +49,8 @@ def start_a_query():
 
 if __name__=='__main__':
     while True:
+        print('client_query_manager is launched!!')
         start_a_query()
+        print('###########################')
 
 

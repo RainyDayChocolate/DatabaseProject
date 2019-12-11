@@ -1,13 +1,14 @@
 #! /usr/bin/env python3
 
-from client_query_manager.query_list import Query_list
-from client_query_manager.specific_queries import Specific_queries
-from client_query_manager.query_type import Query_type
 from client_query_manager.helper_class import Helper_class
+from client_query_manager.query_list import Query_list
+from client_query_manager.query_type import Query_type
+from client_query_manager.specific_queries import Specific_queries
+
 
 class Query_Mutex:
     '''
-    This interface receives the requested state to change the 
+    This interface receives the requested state to change the
     state of the query in run-time.
     '''
     queryType = None
@@ -17,7 +18,7 @@ class Query_Mutex:
     def set_query_type(self, queryType = None):
         '''
         set the query type for subsequent logic selection. The queryType is in enum format
-        @ queryType : String. 
+        @ queryType : String.
         '''
         if not queryType:
             raise Exception( 'There is input queryType. queryType must be an enum' )
@@ -25,7 +26,7 @@ class Query_Mutex:
         self.queryType = queryType
         self.queryListInquirer.create_query_set( self.queryType )
         self.queryDict = self.queryListInquirer.getQueryHashTable()
-    
+
     def getQueryList(self):
         return self.queryListInquirer.getQueryList()
 

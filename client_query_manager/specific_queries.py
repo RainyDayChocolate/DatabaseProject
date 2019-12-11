@@ -1,10 +1,9 @@
 #!/usr/in/env python3
 
-from app.explorations import Explorations
-from client_query_manager.query_enum import Query_enum
+from database_operation.explorations import Explorations
 from client_query_manager.helper_class import Helper_class, NumberValidator
+from client_query_manager.query_enum import Query_enum
 
-from app.explorations import Explorations
 
 class Specific_queries:
     query_table = dict()
