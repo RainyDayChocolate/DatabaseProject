@@ -157,22 +157,17 @@ class Specific_queries:
         day_of_week = resp['day_of_week']
 
         day_id = None
-        if day_of_week == 'Monday':
-            day_id = 1
-        elif day_of_week == 'Tuesday':
-            day_id = 2
-        elif day_of_week == 'Wednesday':
-            day_id = 3
-        elif day_of_week == 'Thursday':
-            day_id = 4
-        elif day_of_week == 'Friday':
-            day_id = 5
-        elif day_of_week == 'Saturday':
-            day_id = 6
-        elif day_of_week == 'Sunday':
-            day_id = 7
-        else:
-            raise ValueError('Specific_queries::average_accident_severity_in_city() Exception: The day is not properly selected.')
+        day_dict = {
+            {'Monday'       : 1},
+            {'Tuesday'      : 2},
+            {'Wednesday'    : 3},
+            {'Thursday'     : 4},
+            {'Friday'       : 5},
+            {'Saturday'     : 6},
+            {'Sunday'       : 7}
+        }
+
+        day_id = day_dict[day_of_week]
 
         answer = self.explorer.get_avg_severity(city, state, day_id)
         print(answer)
