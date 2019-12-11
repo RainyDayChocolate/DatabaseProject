@@ -1,12 +1,9 @@
-from app.explorations import Explorations
-from app.querier import Querier
 from client_query_manager.query_mutex import *
-from client_query_manager.specific_queries import Specific_queries
 
 # GUI
 from client_query_manager import custom_style_3
-from pprint import pprint
 from PyInquirer import prompt
+from app.querier import Querier
 
 '''
 Please run with:
@@ -81,8 +78,8 @@ if __name__=='__main__':
         }
     ]
     selected_query = prompt(what_is_your_query, style = custom_style_3)['specific_query']
-
     queryMutex.get_query_request(selected_query)
+
     
     
 
