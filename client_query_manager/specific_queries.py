@@ -95,19 +95,20 @@ class Specific_queries:
         print(answer)
 
     def career_average_dist_from_airpport(self):
-        stateAndAbbrList = self.helper.getAllStatesAndAbbr()
-        stateAndAbbr = self.helper.getAnswersFromQuestionSet( [
+        airportAbbrList = self.helper.get_all_airports_abbr()
+        resp = self.helper.getAnswersFromQuestionSet( [
             {
                 'type' : 'list',
-                'name' : 'dep_state',
+                'name' : 'dep_airport',
                 'message' : 'Choose your departure state',
-                'choices' : stateAndAbbrList
+                'choices' : airportAbbrList
             }
         ])
 
-        dep_state_abbr = stateAndAbbr['dep_state'].split()[1]
+        dep_airport_abbr = resp['dep_airport']
 
-        answer = self.explorer.get_carrier_avg_distance(dep_state_abbr)
+        answer = self.explorer.get_carrier_avg_distance(dep_airport_abbr)
+        print(answer)
 
     def highest_accident_rate_on_street(self):
         citiesAndStatesList = self.helper.get_all_cities_and_states_list()
@@ -132,7 +133,7 @@ class Specific_queries:
         city, state = self.helper.get_city_and_state_tuple( resp['city_and_state'] )
         limit_items_num = resp['limit_items']
 
-        answer = self.explorer.get_accident_street_side_ratio(city, state, limit_items_num)
+        answer = self.explorer.get_accident_street(city, state, limit_items_num)
         print(answer)
 
     def average_accident_severity_in_city(self):
@@ -157,22 +158,17 @@ class Specific_queries:
         day_of_week = resp['day_of_week']
 
         day_id = None
-        if day_of_week == 'Monday':
-            day_id = 1
-        elif day_of_week == 'Tuesday':
-            day_id = 2
-        elif day_of_week == 'Wednesday':
-            day_id = 3
-        elif day_of_week == 'Thursday':
-            day_id = 4
-        elif day_of_week == 'Friday':
-            day_id = 5
-        elif day_of_week == 'Saturday':
-            day_id = 6
-        elif day_of_week == 'Sunday':
-            day_id = 7
-        else:
-            raise ValueError('Specific_queries::average_accident_severity_in_city() Exception: The day is not properly selected.')
+        day_dict = {
+            {'Monday'       : 1},
+            {'Tuesday'      : 2},
+            {'Wednesday'    : 3},
+            {'Thursday'     : 4},
+            {'Friday'       : 5},
+            {'Saturday'     : 6},
+            {'Sunday'       : 7}
+        }
+
+        day_id = day_dict[day_of_week]
 
         answer = self.explorer.get_avg_severity(city, state, day_id)
         print(answer)
