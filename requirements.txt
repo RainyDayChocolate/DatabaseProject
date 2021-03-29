@@ -3,7 +3,7 @@ numpy==1.17.4
 pandas==0.25.3
 prompt-toolkit==1.0.14
 psycopg2==2.8.4
-Pygments==2.5.2
+Pygments==2.7.4
 PyInquirer==1.0.3
 python-dateutil==2.8.1
 pytz==2019.3
