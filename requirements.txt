@@ -1,5 +1,5 @@
 lxml==4.4.2
-numpy==1.17.4
+numpy==1.22.0
 pandas==0.25.3
 prompt-toolkit==1.0.14
 psycopg2==2.8.4
